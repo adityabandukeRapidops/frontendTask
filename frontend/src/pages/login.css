@@ -1,0 +1,37 @@
+.mainDiv {
+    width: 720px;
+
+    height: 583px;
+    left: 360px;
+    gap: 64px;
+    /* border: 0 0 1px 0; */
+    border: 2px solid gray;
+    margin: auto;
+    margin-top: 131.43px;
+    ;
+
+}
+
+.title {
+    /* width: 307px; */
+    height: 48px;
+    Gap: 4px;
+    text-align: center;
+    margin: auto;
+    font-family: Poppins;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 48px;
+    letter-spacing: 0px;
+
+}
+
+/* .ptitle {
+    font-family: Poppins;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 48px;
+    letter-spacing: 0px;
+    text-align: left;
+
+} */
