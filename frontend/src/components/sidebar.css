@@ -1,9 +1,9 @@
 .sideContainer {
     width: 64px;
-    height: 930px;
-    border: 2px solid grey;
+    height: 950px;
     padding: 10px; /* Adjust padding as needed */
     display: flex;
+    border-right: 1px solid #E1E1E8;
     flex-direction: column;
     justify-content: space-between;
   }

@@ -18,12 +18,15 @@ const Login = () => {
         event.preventDefault();
         console.log(email , password)
         try {
-            const response = await axios.post('https://backendtask-71g8.onrender.com/rapidops/api/users/signin', {
+            const response = await axios.post('http://localhost:8000/rapidops/api/users/signin', {
                 email: email,
                 password: password
             });
 
             console.log(response.data);
+            console.log(response.data.data._id);
+            localStorage.setItem('uid' , response.data.data._id);
+            localStorage.setItem('token' , response.data.data.token);
             // You can handle success response here, such as redirecting to another page
         } catch (error) {
             console.error('Error occurred:', error);

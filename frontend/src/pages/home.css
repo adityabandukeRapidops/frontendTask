@@ -41,6 +41,7 @@
 .mainContentWrapper {
     display: flex;
     margin-top: 20px;
+    height: 850px;
 }
 
 /* Form Container */
@@ -79,7 +80,7 @@
 }
 
 .attachmentPreview input[type="file"] {
-    display: none;
+    /* display: none; */
 }
 
 /* Side Wrapper */
