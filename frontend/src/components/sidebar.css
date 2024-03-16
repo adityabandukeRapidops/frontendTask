@@ -1,0 +1,27 @@
+.sideContainer {
+    width: 64px;
+    height: 930px;
+    border: 2px solid grey;
+    padding: 10px; /* Adjust padding as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .upperLogos,
+  .lowerLogos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo {
+    width: 100%;
+    padding: 5px; /* Adjust padding as needed */
+    margin-bottom: 10px; /* Adjust margin as needed */
+  }
+  
+  .logo img {
+    width: 100%; /* Ensures the logo fills its container */
+  }
+  

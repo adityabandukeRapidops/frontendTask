@@ -1,57 +1,101 @@
-.homeContainer {
+/* Main Wrapper */
+.mainWrapper {
     display: flex;
 }
 
-.sideBar {
-    width: 64px;
-    height: 100vh;
-    padding: 8px;
-    gap: 8px;
-    border-right: 1px solid black;
-}
-
-.contentContainer {
+/* Content Wrapper */
+.contentWrapper {
     flex: 1;
-    display: flex;
-    flex-direction: column;
 }
 
-.navBar {
-    width: 100%;
-    height: 80px;
+/* Header Section */
+.headerSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 24px 32px;
-    gap: 16px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #ccc;
 }
 
-.mainContent {
-    flex: 1;
+.leftContent,
+.rightContent {
     display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-.container {
-    flex: 1;
+.navButton {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.navButton:hover {
+    background-color: #0056b3;
+}
+
+/* Main Content Wrapper */
+.mainContentWrapper {
+    display: flex;
+    margin-top: 20px;
+}
+
+/* Form Container */
+.formContainer {
+    width: 1299px;
+    margin-top: 24px;
+    margin-left: 34px;
     padding: 32px;
     box-sizing: border-box;
-    background-color: lightgray;
-    width: 952px;
-height: 698px;
-top: 104px;
-left: 88px;
-gap: 32px;
-
 }
 
-.rightBar {
+.form-group {
+    margin-bottom: 16px;
+}
+
+/* Attachment Container */
+.attachmentContainer {
+    margin-top: 32px;
+}
+
+.attachmentHeader {
+    width: 100%;
+    height: 18px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.attachmentPreview {
+    width: 480px;
+    height: 248px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 16px;
+}
+
+.attachmentPreview input[type="file"] {
+    display: none;
+}
+
+/* Side Wrapper */
+.sideWrapper {
     width: 376px;
+    margin-top: 24px;
     margin-left: 32px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
 }
 
-.buttonDiv{
-    float: right;
-    display: flex;
-    
+.checkboxContainer {
+    margin-top: 32px;
 }
-button{
-    margin-left: 10px;
+
+.checkboxContainer .styled-checkbox {
+    margin-right: 8px;
 }

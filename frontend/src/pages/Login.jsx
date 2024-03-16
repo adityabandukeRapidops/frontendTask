@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios'
-import "./login.css"
+import axios from 'axios';
+import './login.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -18,55 +16,44 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(email , password)
+        try {
+            const response = await axios.post('https://backendtask-71g8.onrender.com/rapidops/api/users/signin', {
+                email: email,
+                password: password
+            });
 
-
+            console.log(response.data);
+            // You can handle success response here, such as redirecting to another page
+        } catch (error) {
+            console.error('Error occurred:', error);
+            // You can handle error here, such as displaying an error message to the user
+        }
     };
 
     return (
-        <>
-            <div className='mainDiv'>
-                <div className='title'>
-
-
-                    <p className='ptitle'>Rapidops Page Builder</p>
-                </div>
-                {/* <form onSubmit={handleSubmit}>
-
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        placeholder="Email"
-                    />
-                    <br />
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        placeholder="Password"
-                    />
-                    <br />
-                    <button type="submit">Submit</button>
-                </form> */}
-
-                <form>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+        <div className='mainDiv'>
+            <div className='title'>
+                <p className='ptitle'>Rapidops Page Builder</p>
             </div>
-        </>
+
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="exampleInputEmail1">Email address</label>
+                    <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" value={email} onChange={handleEmailChange} />
+                    <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="exampleInputPassword1">Password</label>
+                    <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" value={password} onChange={handlePasswordChange} />
+                </div>
+                <div className="form-check">
+                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+                    <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
+                </div>
+                <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+            </form>
+        </div>
     );
 };
 
