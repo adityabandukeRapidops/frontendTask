@@ -14,10 +14,16 @@ const Home = () => {
     const [url, setUrl] = useState('');
     const [author, setAuthor] = useState('');
     const [styledCheckbox, setStyledCheckbox] = useState(false);
+    const [htmlCode, setHtmlCode] = useState(''); 
+    const [showPreview, setShowPreview] = useState(false);
+    const [file , setFile] = useState();
+
 
     // Function to handle file upload
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
+        setFile(file)
+        console.log(file)
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -80,20 +86,30 @@ const Home = () => {
         const token = localStorage.getItem('token')
 
         console.log(token, 'coming in homePage')
-        const data = {
-            title: title,
-            subtext: subtext,
-            code: htmlContent,
-            endPoint: url,
-            status: "draft",
 
+        console.log(file)
+        const formData = new FormData();
 
-        }
-        console.log(data.code)
+        // Append other form data fields
+        formData.append('title', title);
+        formData.append('subtext', subtext);
+        formData.append('code', htmlContent);
+        formData.append('endPoint', url);
+        formData.append('status', 'draft');
+        formData.append('file', file);
+        // const data = {
+        //     title: title,
+        //     subtext: subtext,
+        //     code: htmlContent,
+        //     endPoint: url,
+        //     status: "draft",
+
+        // }
+        // console.log(data)
         // console.log(token , '')
 
         try {
-            const response = await axios.post(`http://localhost:8000/rapidops/api/htmlFile/postCode?uid=${uid}`, data, { headers: { authorization: token } });
+            const response = await axios.post(`http://localhost:8000/rapidops/api/htmlFile/postCode?uid=${uid}`, formData, { headers: { authorization: token } });
 
             console.log(response.data, 'saved success');
             // You can handle success response here, such as redirecting to another page
@@ -102,6 +118,30 @@ const Home = () => {
             // You can handle error here, such as displaying an error message to the user
         }
     };
+
+
+
+    const handlePreviewOption = () => {
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${title}</title>
+            </head>
+            <body>
+                <h1>${title}</h1>
+                <p>${subtext}</p>
+                ${content}
+            </body>
+            </html>
+        `;
+
+        setHtmlCode(htmlContent);
+        setShowPreview(true);
+    };
+
 
     return (
         <div className='mainWrapper'>
@@ -120,7 +160,7 @@ const Home = () => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">preview</Dropdown.Item>
+                                <Dropdown.Item href="#/action-1" onClick={handlePreviewOption}>preview</Dropdown.Item>
                                 <Dropdown.Item href="#/action-2">delete</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
@@ -157,39 +197,46 @@ const Home = () => {
                 </div>
 
                 <div className='mainContentWrapper'>
-                    <div className='formContainer'>
-                        <form>
-                            <div className="form-group">
-                                <label htmlFor="exampleInputEmail1">Title</label>
-                                <input type="text" className="form-control" id="title" aria-describedby="" placeholder="Enter Title" value={title} onChange={handleTitleChange} />
+                   
+                     {!showPreview ? (
+                        <div className='formContainer'>
+                            <form>
+                                <div className="form-group">
+                                    <label htmlFor="exampleInputEmail1">Title</label>
+                                    <input type="text" className="form-control" id="title" aria-describedby="" placeholder="Enter Title" value={title} onChange={handleTitleChange} />
+                                </div>
+                                <div className="form-group">
+                                    <label>Subtext</label>
+                                    <input type="text" className="form-control" id="subtext" placeholder="Enter Subtext" value={subtext} onChange={handleSubtextChange} />
+                                </div>
+                            </form>
+                            <label htmlFor="">Body</label>
+                            <JoditEditor
+                                ref={editor}
+                                value={content}
+                                tabIndex={1}
+                                onBlur={newContent => setContent(newContent)}
+                                onChange={newContent => { }}
+                            />
+                            <div className='attachmentContainer'>
+                                <div className='attachmentHeader'>
+                                    Attachments
+                                </div>
+                                <div className='attachmentPreview'>
+                                    {imagePreview && (
+                                        <img src={imagePreview} alt="Preview" style={{ width: '30%', height: 'auto' }} />
+                                    )}
+                                    <input type="file" accept="image/*" onChange={handleFileUpload} />
+                                </div>
+                                <p>Supported files: JPEG. PNG. PDF. DOC. XLX. PPT.</p>
                             </div>
-                            <div className="form-group">
-                                <label>Subtext</label>
-                                <input type="text" className="form-control" id="subtext" placeholder="Enter Subtext" value={subtext} onChange={handleSubtextChange} />
-                            </div>
-
-                        </form>
-                        <label htmlFor="">Body</label>
-                        <JoditEditor
-                            ref={editor}
-                            value={content}
-                            tabIndex={1}
-                            onBlur={newContent => setContent(newContent)}
-                            onChange={newContent => { }}
-                        />
-                        <div className='attachmentContainer'>
-                            <div className='attachmentHeader'>
-                                Attachments
-                            </div>
-                            <div className='attachmentPreview'>
-                                {imagePreview && (
-                                    <img src={imagePreview} alt="Preview" style={{ width: '30%', height: 'auto' }} />
-                                )}
-                                <input type="file" accept="image/*" onChange={handleFileUpload} />
-                            </div>
-                            <p>Supported files: JPEG. PNG. PDF. DOC. XLX. PPT.</p>
                         </div>
-                    </div>
+                    ) : (
+                        <>
+                        <h1>showing preview</h1>
+                        <div className='formContainer' dangerouslySetInnerHTML={{ __html: htmlCode }}></div>
+                        </>
+                    )}
                     <div className='sideWrapper'>
                         <div className="inputFields">
                             <div className="form-group">
