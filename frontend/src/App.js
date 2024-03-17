@@ -3,6 +3,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home'
 import Dashboard from './pages/dashboard'
+import LandingPage from './pages/landingPage'
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/homePage" element={<Home />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
+          <Route exact path="/landing" element={<LandingPage />} />
+
 
         </Routes>
       </Router>

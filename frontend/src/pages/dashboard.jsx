@@ -13,8 +13,7 @@ const Dashboard = () => {
         const fetchTableData = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/rapidops/api/htmlFile/getHtmlbyfilter?status=${statusFilter}&user=${selectedUser}`);
-                console.log(selectedUser)
-                console.log(response.data)
+                console.log(selectedUser, statusFilter)
                 setTableData(response.data);
             } catch (error) {
                 console.error('Error fetching table data:', error);
@@ -22,7 +21,9 @@ const Dashboard = () => {
         };
 
         fetchTableData();
-    }, [statusFilter, selectedUser]);
+    }, [statusFilter, selectedUser,tableData]);
+
+    
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -42,8 +43,25 @@ const Dashboard = () => {
     };
 
     const handleUserChange = (event) => {
-        console.log()
         setSelectedUser(event.target.value);
+    };
+
+    const handleDeleteRow = async (rowId) => {
+        console.log(rowId)
+        try {
+            const deleteHtml = await axios.delete(`http://localhost:8000/rapidops/api/htmlFile/deleteHtml/${rowId}`);
+            console.log(deleteHtml)
+
+            const updatedTableData = tableData.filter(row => row.id !== rowId);
+            setTableData(updatedTableData);
+        } catch (error) {
+            console.error('Error deleting row:', error);
+        }
+    };
+
+    const handleEditRow = (rowId) => {
+        // Redirect to the edit page for the selected row or call edit API
+        console.log('Editing row:', rowId);
     };
 
     return (
@@ -72,7 +90,7 @@ const Dashboard = () => {
                             <option value="scheduled">Scheduled</option>
                         </select>
                         <select value={selectedUser} onChange={handleUserChange}>
-                            <option value="all">All Users</option>
+                            <option value="All">All Users</option>
                             {userOptions.map((user) => (
                                 <option key={user.id} value={user.id}>{user.name}</option>
                             ))}
@@ -97,7 +115,20 @@ const Dashboard = () => {
                                 {tableData.map((row, index) => (
                                     <tr key={index}>
                                         <th scope="row">{index + 1}</th>
-                                        <td>{row.title}</td>
+                                        <td className='tdtitle'>
+                                            <div>
+                                                {row.title}
+                                            </div>
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" id={`dropdownMenuButton-${index}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    ...
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby={`dropdownMenuButton-${index}`}>
+                                                    <a class="dropdown-item" href="#" onClick={() => handleDeleteRow(row._id)}>delete</a>
+                                                    <a class="dropdown-item" href="#" onClick={() => handleEditRow(row._id)}>edit</a>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td>{row.endPoint}</td>
                                         <td>{row.createdBy}</td>
                                         <td>{row.createdAt}</td>

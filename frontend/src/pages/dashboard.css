@@ -76,3 +76,8 @@
 .dashboardTable th {
     background-color: #f2f2f2;
 }
+
+.tdtitle{
+    display: flex;
+    justify-content: space-evenly;
+}

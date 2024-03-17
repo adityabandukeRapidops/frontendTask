@@ -52,8 +52,10 @@ const Home = () => {
         setStyledCheckbox(e.target.checked);
     };
 
+
+
     // Handle save button click
-    const handleSaveButtonClick = async() => {
+    const handleSaveButtonClick = async () => {
         // Dummy HTML structure
         const htmlContent = `
             <!DOCTYPE html>
@@ -77,21 +79,21 @@ const Home = () => {
         const uid = localStorage.getItem('uid');
         const token = localStorage.getItem('token')
 
-        console.log(token , 'coming in homePage')
+        console.log(token, 'coming in homePage')
         const data = {
-            title : title,
-            subtext : subtext,
-            code : htmlContent,
-            endPoint : url,
-            status : "draft",
-            
+            title: title,
+            subtext: subtext,
+            code: htmlContent,
+            endPoint: url,
+            status: "draft",
+
 
         }
         console.log(data.code)
         // console.log(token , '')
 
         try {
-            const response = await axios.post(`http://localhost:8000/rapidops/api/htmlFile/postCode?uid=${uid}`, data , {headers : {authorization : token}});
+            const response = await axios.post(`http://localhost:8000/rapidops/api/htmlFile/postCode?uid=${uid}`, data, { headers: { authorization: token } });
 
             console.log(response.data, 'saved success');
             // You can handle success response here, such as redirecting to another page
@@ -118,14 +120,39 @@ const Home = () => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Option 1</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">Option 2</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Option 3</Dropdown.Item>
+                                <Dropdown.Item href="#/action-1">preview</Dropdown.Item>
+                                <Dropdown.Item href="#/action-2">delete</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                         <button type="button" className="navButton cancelButton">Cancel</button>
                         <button type="button" className="navButton saveButton" onClick={handleSaveButtonClick}>Save</button>
-                        <button type="button" className="navButton publishButton">Publish</button>
+
+
+                        <button type="button" className="navButton publishButton" data-bs-toggle="modal" data-bs-target="#exampleModal">Publish</button>
+
+
+
+
+
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-dark text-white">
+                                        <h5 class="modal-title" id="exampleModalLabel">Publish</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
 
@@ -140,7 +167,7 @@ const Home = () => {
                                 <label>Subtext</label>
                                 <input type="text" className="form-control" id="subtext" placeholder="Enter Subtext" value={subtext} onChange={handleSubtextChange} />
                             </div>
-                            
+
                         </form>
                         <label htmlFor="">Body</label>
                         <JoditEditor
