@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/sidebar';
 import axios from 'axios';
 import './dashboard.css';
+import {useNavigate} from 'react-router-dom'
 
 const Dashboard = () => {
     const [tableData, setTableData] = useState([]);
     const [statusFilter, setStatusFilter] = useState('All');
     const [selectedUser, setSelectedUser] = useState('All');
     const [userOptions, setUserOptions] = useState([]);
+    const [key, setKey] = useState(0);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTableData = async () => {
@@ -19,9 +23,13 @@ const Dashboard = () => {
                 console.error('Error fetching table data:', error);
             }
         };
+        console.log(key)
 
         fetchTableData();
-    }, [statusFilter, selectedUser,tableData]);
+    }, [statusFilter, selectedUser,key]);
+
+
+    
 
     
 
@@ -30,6 +38,7 @@ const Dashboard = () => {
             try {
                 const response = await axios.get('http://localhost:8000/rapidops/api/users/getAllUsers');
                 setUserOptions(response.data);
+                
             } catch (error) {
                 console.error('Error fetching users:', error);
             }
@@ -54,14 +63,21 @@ const Dashboard = () => {
 
             const updatedTableData = tableData.filter(row => row.id !== rowId);
             setTableData(updatedTableData);
+            setKey(prevKey => prevKey + 1);
         } catch (error) {
             console.error('Error deleting row:', error);
         }
     };
 
+
+
     const handleEditRow = (rowId) => {
         // Redirect to the edit page for the selected row or call edit API
+        localStorage.setItem('htmlId' , rowId)
+        
+        navigate('/homePage')
         console.log('Editing row:', rowId);
+
     };
 
     return (
@@ -75,7 +91,10 @@ const Dashboard = () => {
                         <span>draft</span>
                     </div>
                     <div className='rightSideItems'>
-                        <button type="button" className="publishButton">Publish</button>
+                        <button type="button" className="publishButton" onClick={()=>{
+                                    navigate('/homePage')
+
+                        }}>+ Add Page</button>
                     </div>
                 </div>
 

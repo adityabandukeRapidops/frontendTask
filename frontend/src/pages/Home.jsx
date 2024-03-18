@@ -1,11 +1,30 @@
 import Dropdown from 'react-bootstrap/Dropdown';
 import './home.css';
 import Sidebar from '../components/sidebar';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import JoditEditor from 'jodit-react';
 import axios from 'axios'
+import {useNavigate} from 'react-router-dom'
 
+
+const config = {
+    readonly: false,
+    buttons: [
+      'bold', 'italic', 'underline', '|',
+      'ul', 'ol', '|',
+      'outdent', 'indent', '|',
+      'font', 'fontsize', 'brush', 'paragraph', '|',
+      'align', '|',
+      'undo', 'redo', '|',
+      'hr', 'eraser', 'fullsize', 'image'
+    ],
+    uploader: {
+      insertImageAsBase64URI: true, // Configures Jodit to insert images as Base64
+    },
+  };
 const Home = () => {
+    const navigate = useNavigate();
+
     const editor = useRef(null);
     const [content, setContent] = useState('');
     const [imagePreview, setImagePreview] = useState(null);
@@ -14,11 +33,40 @@ const Home = () => {
     const [url, setUrl] = useState('');
     const [author, setAuthor] = useState('');
     const [styledCheckbox, setStyledCheckbox] = useState(false);
-    const [htmlCode, setHtmlCode] = useState(''); 
+    const [htmlCode, setHtmlCode] = useState('');
     const [showPreview, setShowPreview] = useState(false);
-    const [file , setFile] = useState();
+    const [file, setFile] = useState();
+    const [publishDate, setPublishDate] = useState('');
+    const [publishTime, setPublishTime] = useState('');
 
+    const htmlId = localStorage.getItem('htmlId');
+    
+    useEffect(() => {
+        const fetchPageData = async () => {
+            
+            if (htmlId) {
+                try {
+                    const response = await axios.get(`http://localhost:8000/rapidops/api/htmlFile/HtmlbyId/${htmlId}`);
+                    const data = response.data;
+                    console.log(data)
 
+                    setTitle(data.title);
+                    setSubtext(data.subtext);
+                    setContent(data.code);
+                    setUrl(data.endPoint);
+                    setAuthor(data.author);
+                    setPublishDate(data.publishDate);
+                    setPublishTime(data.publishTime);
+
+                    // Additional logic to handle image preview if needed
+                } catch (error) {
+                    console.error('Error occurred:', error);
+                }
+            }
+        };
+
+        fetchPageData();
+    }, []);
     // Function to handle file upload
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
@@ -35,6 +83,7 @@ const Home = () => {
 
     // Handle title change
     const handleTitleChange = (e) => {
+        console.log(e.target.value)
         setTitle(e.target.value);
     };
 
@@ -96,7 +145,11 @@ const Home = () => {
         formData.append('code', htmlContent);
         formData.append('endPoint', url);
         formData.append('status', 'draft');
-        formData.append('file', file);
+    
+        // Check if a file is provided
+        if (file) {
+            formData.append('file', file);
+        }
         // const data = {
         //     title: title,
         //     subtext: subtext,
@@ -108,15 +161,42 @@ const Home = () => {
         // console.log(data)
         // console.log(token , '')
 
-        try {
-            const response = await axios.post(`http://localhost:8000/rapidops/api/htmlFile/postCode?uid=${uid}`, formData, { headers: { authorization: token } });
+        console.log(formData)
+        const htmlId = localStorage.getItem('htmlId');
+        console.log(htmlId);
 
-            console.log(response.data, 'saved success');
-            // You can handle success response here, such as redirecting to another page
-        } catch (error) {
-            console.error('Error occurred:', error);
-            // You can handle error here, such as displaying an error message to the user
+        if(!htmlId){
+            try {
+                const response = await axios.post(`http://localhost:8000/rapidops/api/htmlFile/postCode?uid=${uid}`, formData, { headers: { authorization: token } });
+                console.log(formData)
+                console.log(response)
+                console.log(response.data._id);
+                localStorage.setItem('htmlId' , response.data._id)
+                localStorage.setItem('htmlId' , response.data.newHtml._id)
+    
+                console.log(response.data, 'saved success');
+                // You can handle success response here, such as redirecting to another page
+            } catch (error) {
+                console.error('Error occurred:', error);
+                // You can handle error here, such as displaying an error message to the user
+            }
+        }else{
+            try{
+              
+                
+                console.log('Updated formData:', formData);
+
+                console.log('htmlId is present so update it ')
+                const response = await axios.patch(`http://localhost:8000/rapidops/api/htmlFile/updateHtmlFull/${htmlId}` , formData);
+
+                console.log(response.data , 'updateData to same id')
+
+                
+            }catch(e){
+                console.log('eroor')
+            }   
         }
+        
     };
 
 
@@ -142,6 +222,48 @@ const Home = () => {
         setShowPreview(true);
     };
 
+
+     // Handle publish date change
+     const handlePublishDateChange = (e) => {
+        setPublishDate(e.target.value);
+    };
+
+    // Handle publish time change
+    const handlePublishTimeChange = (e) => {
+        setPublishTime(e.target.value);
+    };
+
+    const handlePublishButtonClick = async() => {
+        // Perform any actions you want here
+        // For example, closing the modal
+        // setShowModal(false); // Assuming setShowModal is a state variable controlling the modal's visibility
+        console.log('lciked publish button');
+
+        const htmlId = localStorage.getItem('htmlId')
+        console.log(htmlId)
+
+        console.log(publishDate , publishTime)
+        
+        const data = {
+            publishDate : publishDate,
+            publishTime : publishTime,
+            status : "scheduled"
+        }
+
+        try {
+            const response = await axios.patch(`http://localhost:8000/rapidops/api/htmlFile/updateHtml/${htmlId}`, data);
+
+           
+            console.log(response.data, 'update success');
+            // localStorage.removeItem("htmlId");
+            // navigate('/dashboard')
+
+        } catch (error) {
+            console.error('Error occurred:', error);
+        }
+
+
+    };
 
     return (
         <div className='mainWrapper'>
@@ -182,11 +304,22 @@ const Home = () => {
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
                                     </div>
                                     <div class="modal-body">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="">Publish Date</label>
+                                                <input type="date" class="form-control" placeholder="Enter Publish Date" onChange={handlePublishDateChange} />
 
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Publish Time</label>
+                                                <input type="time" class="form-control" placeholder="Enter Publish Time" onChange={handlePublishTimeChange} />
+                                            </div>
+
+                                        </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+                                        <button type="button" class="btn btn-primary" onClick={handlePublishButtonClick} data-bs-dismiss="modal">Publish</button>
                                     </div>
                                 </div>
                             </div>
@@ -197,8 +330,8 @@ const Home = () => {
                 </div>
 
                 <div className='mainContentWrapper'>
-                   
-                     {!showPreview ? (
+
+                    {!showPreview ? (
                         <div className='formContainer'>
                             <form>
                                 <div className="form-group">
@@ -215,6 +348,7 @@ const Home = () => {
                                 ref={editor}
                                 value={content}
                                 tabIndex={1}
+                                config={config}
                                 onBlur={newContent => setContent(newContent)}
                                 onChange={newContent => { }}
                             />
@@ -233,8 +367,8 @@ const Home = () => {
                         </div>
                     ) : (
                         <>
-                        <h1>showing preview</h1>
-                        <div className='formContainer' dangerouslySetInnerHTML={{ __html: htmlCode }}></div>
+                            <h1>showing preview</h1>
+                            <div className='formContainer' dangerouslySetInnerHTML={{ __html: htmlCode }}></div>
                         </>
                     )}
                     <div className='sideWrapper'>
