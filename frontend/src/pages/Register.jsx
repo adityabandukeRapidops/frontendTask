@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios'
+import group from '../assets/Group.png'
 
+import {useNavigate} from 'react-router-dom'
 const Register = () => {
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [newsletter, setNewsletter] = useState(false);
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -20,74 +25,59 @@ const Register = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(email , password)
+        console.log(username ,email , password)
         try {
             const res = await axios.post("https://backendtask-71g8.onrender.com/rapidops/api/users/signup", {
-                name: "aditya",
+                name: username,
                 email,
                 password
             });
-            console.log(res.data); // Assuming the response contains data
+            console.log(res.data); 
+            navigate('/login')// Assuming the response contains data
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
     return (
-        <>
-            <div className='mainDiv'>
-                <div className='title'>
+       
 
-
-                    <p className='ptitle'>Rapidops Page Builder</p>
+        <div className='container mt-5'>
+            <div className="row justify-content-center">
+                <div className="col-12 col-md-8 col-lg-8">
+                <div className=" justify-content-center text-center mb-4 py-3 " style={{display:'flex' , justifyContent : 'center' , alignItems:'center'}}>
+                    <img src={group} className='img-fluid logo' alt=""  style={{display:'flex' ,width : '50px'}}/>
+                    <h1>Rapid Page Builder</h1>
                 </div>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={handleUsernameChange}
-                        placeholder="Username"
-                    />
-                    <br />
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        placeholder="Email"
-                    />
-                    <br />
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        placeholder="Password"
-                    />
-                    <br />
-                    <button type="submit">Submit</button>
-                </form>
+                    <form className='px-5 pb-3 grey-border ' style={{border:'1px solid #E5E7EB'}} onSubmit={handleSubmit}>
+                        <h3 className='my-5 fs-2 '>Register</h3>
+                        <div className="mb-3">
+                            <label htmlFor="nameInput" className="form-label">Full Name <span className='text-danger'>*</span></label>
+                            <input value={username} onChange={handleUsernameChange} type="text" className="p-2 form-control" id="nameInput" autoComplete="on" placeholder='Enter Name' />
+                        </div>
+                        <div>
+                            <label htmlFor="exampleInputEmail1" className="form-label">Username or email address <span className='text-danger'>*</span></label>
+                            <input value={email} onChange={handleEmailChange} type="email" className="p-2 form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder='Enter your email address' />
+                            <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="exampleInputPassword1" className="form-label">Password <span className='text-danger'>*</span></label>
+                            <input value={password} onChange={handlePasswordChange} type="password" className="p-2 form-control" id="exampleInputPassword1" autoComplete="on" placeholder='Enter password' />
+                        </div>
+                        <div className="mb-3 form-check">
+                            <input type="checkbox" className="form-check-input" id="exampleCheck1" checked={newsletter} onChange={(e) => setNewsletter(e.target.checked)} />
+                            <label className="form-check-label" htmlFor="exampleCheck1">Subscribe to our newsletter</label>
+                        </div>
+                        <p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our <span className='text-primary'>privacy policy</span>.</p>
+                        <div className="">
+                            <button type="submit" className="btn bg-primary  my-4 ">Register</button>
+                        </div>
 
-                {/* <form>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Username</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form> */}
+                        
+                    </form>
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 

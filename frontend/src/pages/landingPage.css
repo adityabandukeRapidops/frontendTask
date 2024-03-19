@@ -8,7 +8,14 @@
     align-items: center;
     height: calc(100vh - 116px);
     flex-grow: 1; /* Fill remaining space */
-    border: 2px solid grey;
+}
+.addButton {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
 }
 
 .card {
@@ -17,7 +24,6 @@
     padding: 32px 32px 32px 64px;
     gap: 40px;
     border-radius: 8px;
-    border: 1px solid black; /* Add border and adjust accordingly */
     display: flex;
     flex-direction: row;
     

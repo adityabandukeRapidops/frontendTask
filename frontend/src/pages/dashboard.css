@@ -17,6 +17,11 @@
     padding: 0 20px;
 }
 
+.left{
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
+}
 .leftSideItems,
 .rightSideItems {
     display: flex;
@@ -80,4 +85,19 @@
 .tdtitle{
     display: flex;
     justify-content: space-evenly;
+}
+.status-draft {
+    color: #D97706;
+    background-color: #FFFBEB;
+}
+
+.status-published {
+    color: #059669;
+    background-color: 
+    #EFF6FF;
+}
+
+.status-scheduled {
+    color: #2563EB;
+    background-color: #ECFDF5;
 }

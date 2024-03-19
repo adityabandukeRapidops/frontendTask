@@ -3,6 +3,7 @@ import Sidebar from '../components/sidebar';
 import axios from 'axios';
 import './dashboard.css';
 import {useNavigate} from 'react-router-dom'
+import dashboard from '../assets/Group.png'
 
 const Dashboard = () => {
     const [tableData, setTableData] = useState([]);
@@ -14,11 +15,13 @@ const Dashboard = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+
         const fetchTableData = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/rapidops/api/htmlFile/getHtmlbyfilter?status=${statusFilter}&user=${selectedUser}`);
                 console.log(selectedUser, statusFilter)
                 setTableData(response.data);
+                console.log(response.data)
             } catch (error) {
                 console.error('Error fetching table data:', error);
             }
@@ -34,6 +37,15 @@ const Dashboard = () => {
     
 
     useEffect(() => {
+        const html = localStorage.getItem('htmlId');
+        if(html){
+            localStorage.removeItem('htmlId')
+
+        }
+        // const uid = localStorage.getItem('uid');
+        // if(uid){
+            
+        // }
         const fetchUsers = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/rapidops/api/users/getAllUsers');
@@ -55,6 +67,20 @@ const Dashboard = () => {
         setSelectedUser(event.target.value);
     };
 
+
+    const getStatusColorClass = (status) => {
+        switch (status) {
+            case 'draft':
+                return 'status-draft';
+            case 'published':
+                return 'status-published';
+            case 'scheduled':
+                return 'status-scheduled';
+            default:
+                return ''; // No specific class for other status values
+        }
+    };
+    
     const handleDeleteRow = async (rowId) => {
         console.log(rowId)
         try {
@@ -84,11 +110,14 @@ const Dashboard = () => {
         <div className='dashboardContainer'>
             <Sidebar />
             <div className='content'>
-                <div className='navBar'>
+                <div className='navBar' style={{border:'1px solid #E5E7EB'}}>
                     <div className='leftSideItems'>
-                        <span>lo</span>
-                        <span>Home Page</span>
-                        <span>draft</span>
+                        <div>logo</div>
+                        <div className='left'>
+                        <span class="h4 font-weight-bold">Pages</span>
+
+                        <span>create and publish pages</span>
+                        </div>
                     </div>
                     <div className='rightSideItems'>
                         <button type="button" className="publishButton" onClick={()=>{
@@ -118,8 +147,8 @@ const Dashboard = () => {
 
                     <div className='tableWrapper'>
                         <table className='dashboardTable'>
-                            <thead>
-                                <tr>
+                            <thead className='bg-white' >
+                                <tr >
                                     <th scope="col">#</th>
                                     <th scope="col">Title</th>
                                     <th scope="col">URL</th>
@@ -138,12 +167,12 @@ const Dashboard = () => {
                                             <div>
                                                 {row.title}
                                             </div>
-                                            <div class="dropdown">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" id={`dropdownMenuButton-${index}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div class="dropdown" style={{display:'flex' , alignItems:'center' , justifyContent:'center'}}>
+                                                <button class="btn " type="button" id={`dropdownMenuButton-${index}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     ...
                                                 </button>
-                                                <div class="dropdown-menu" aria-labelledby={`dropdownMenuButton-${index}`}>
-                                                    <a class="dropdown-item" href="#" onClick={() => handleDeleteRow(row._id)}>delete</a>
+                                                <div class="dropdown-menu"  aria-labelledby={`dropdownMenuButton-${index}`}>
+                                                    <a class="dropdown-item" href="#" onClick={() => handleDeleteRow(row._id)} style={{color : 'red'}}>delete</a>
                                                     <a class="dropdown-item" href="#" onClick={() => handleEditRow(row._id)}>edit</a>
                                                 </div>
                                             </div>
@@ -153,7 +182,7 @@ const Dashboard = () => {
                                         <td>{row.createdAt}</td>
                                         <td>{row.modifiedBy}</td>
                                         <td>{row.modifiedAt}</td>
-                                        <td>{row.status}</td>
+                                        <td className={getStatusColorClass(row.status)}>{row.status}</td>
                                     </tr>
                                 ))}
                             </tbody>
