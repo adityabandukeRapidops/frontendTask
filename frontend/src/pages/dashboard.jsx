@@ -43,10 +43,10 @@ const Dashboard = () => {
             localStorage.removeItem('htmlId')
 
         }
-        // const uid = localStorage.getItem('uid');
-        // if(uid){
-            
-        // }
+        const uid = localStorage.getItem('uid');
+        if(!uid){
+          navigate('/login')  
+        }
         const fetchUsers = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/rapidops/api/users/getAllUsers');
@@ -197,7 +197,7 @@ const Dashboard = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{row.endPoint}</td>
+                                        <td><a href={`http://localhost:8000/rapidops/api/htmlFile/getCode/${row.endPoint}`}>{row.endPoint}</a></td>
                                         <td>{row.createdBy}</td>
                                         <td>{row.createdAt}</td>
                                         <td>{row.modifiedBy}</td>

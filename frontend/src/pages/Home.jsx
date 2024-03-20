@@ -38,13 +38,20 @@ const Home = () => {
     const [file, setFile] = useState();
     const [publishDate, setPublishDate] = useState('');
     const [publishTime, setPublishTime] = useState('');
-    const [authorEmail , setAuthorEmail] = useState('')
+    const [authorEmail, setAuthorEmail] = useState('')
 
     const htmlId = localStorage.getItem('htmlId');
     const uid = localStorage.getItem('uid');
 
     useEffect(() => {
         const fetchPageData = async () => {
+
+            if (!uid) {
+                const uid = localStorage.getItem('uid');
+                if (!uid) {
+                    navigate('/login')
+                }
+            }
 
             if (htmlId) {
                 try {
@@ -195,8 +202,8 @@ const Home = () => {
             }
         } else {
             try {
-                formData.append('modifiedBy' , author);
-                formData.append('modifiedAt' , Date.now());
+                formData.append('modifiedBy', author);
+                formData.append('modifiedAt', Date.now());
 
                 console.log('Updated formData:', formData);
 
@@ -233,9 +240,9 @@ const Home = () => {
             </html>
         `;
         console.log(file)
-        if(file){
+        if (file) {
             const fileLink = `<a href="file" download="file">DownloadFile</a>`;
-            htmlContent = htmlContent.replace('</body>', `${fileLink}</body>`);  
+            htmlContent = htmlContent.replace('</body>', `${fileLink}</body>`);
         }
 
         setHtmlCode(htmlContent);
@@ -289,27 +296,27 @@ const Home = () => {
                     <div className='leftContent'>
                         <span></span>
                         <span class="h4 font-weight-bold">Home Page</span>
-                        <span style={{color:'#D97706'}}>draft</span>
+                        <span style={{ color: '#D97706' }}>draft</span>
                     </div>
                     <div className='rightContent'>
                         <Dropdown>
-                            <Dropdown.Toggle variant="" style={{border:'1px solid black'}} id="">
+                            <Dropdown.Toggle variant="" style={{ border: '1px solid black' }} id="">
                                 ...
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
                                 <Dropdown.Item href="#/action-1" onClick={handlePreviewOption}>preview</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2" style={{color : 'red'}}>delete</Dropdown.Item>
+                                <Dropdown.Item href="#/action-2" style={{ color: 'red' }}>delete</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
-                        <button type="button" className="navButton cancelButton" style={{backgroundColor : 'white', color:'black' , border:'1px solid black'}}
-                        onClick={()=>{
-                            navigate('/dashboard ')
-                        }}>Cancel</button>
-                        <button type="button" className="navButton saveButton" onClick={handleSaveButtonClick} style={{backgroundColor:'#4F46E5'}}>Save</button>
+                        <button type="button" className="navButton cancelButton" style={{ backgroundColor: 'white', color: 'black', border: '1px solid black' }}
+                            onClick={() => {
+                                navigate('/dashboard ')
+                            }}>Cancel</button>
+                        <button type="button" className="navButton saveButton" onClick={handleSaveButtonClick} style={{ backgroundColor: '#4F46E5' }}>Save</button>
 
 
-                        <button type="button" className="navButton publishButton" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{backgroundColor:'#059669'}}>Publish</button>
+                        <button type="button" className="navButton publishButton" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{ backgroundColor: '#059669' }}>Publish</button>
 
 
 

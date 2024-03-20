@@ -27,7 +27,7 @@ const Register = () => {
         event.preventDefault();
         console.log(username ,email , password)
         try {
-            const res = await axios.post("https://backendtask-71g8.onrender.com/rapidops/api/users/signup", {
+            const res = await axios.post("http://localhost:8000/rapidops/api/users/signup", {
                 name: username,
                 email,
                 password

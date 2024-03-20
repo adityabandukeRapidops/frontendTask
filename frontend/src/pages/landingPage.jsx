@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Sidebar from '../components/sidebar.jsx';
 import './landingPage.css'
 import girl from '../assets/girl.svg'
@@ -6,6 +6,13 @@ import {useNavigate} from 'react-router-dom'
 
 const LandingPage = () => {
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        const uid = localStorage.getItem('uid');
+        if(!uid){
+          navigate('/login')  
+        }
+    },[])
 
     return (
         <div className="mainWrapper">
